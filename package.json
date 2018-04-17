@@ -1,0 +1,25 @@
+{
+  "name": "cordova-plugin-ble-packet-beacon",
+  "version": "0.0.2",
+  "description": "This plug in lets you advertise a package of data through ble",
+  "cordova": {
+    "id": "cordova-plugin-ble-packet-beacon",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesuislinngh/BlePacketBeacon.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Alejandro Linn Delgado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jesuislinngh/BlePacketBeacon/issues"
+  },
+  "homepage": "https://github.com/jesuislinngh/BlePacketBeacon#readme"
+}

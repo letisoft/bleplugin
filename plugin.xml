@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-ble-packet-beacon" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>BlePacketBeacon</name>
+    <js-module name="BlePacketBeacon" src="www/BlePacketBeacon.js">
+        <clobbers target="cordova.plugins.BlePacketBeacon"/>
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="BlePacketBeacon">
+                <param name="android-package" value="cordova.plugin.ble.packet.beacon.BlePacketBeacon"/>
+            </feature>
+        </config-file>
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+        </config-file>
+        <source-file src="src/android/BlePacketBeacon.java"
+                     target-dir="src/cordova-plugin-ble-packet-beacon/BlePacketBeacon"/>
+    </platform>
+</plugin>
