@@ -169,7 +169,7 @@ public class BlePacketBeacon extends CordovaPlugin {
         //advertDataBuilder.setIncludeDeviceName(true);
         //advertDataBuilder.addServiceUuid(mUUID);
 
-        byte [] dataBytes = Base64.decode(data,Base64.DEFAULT);
+        byte [] dataBytes = data.getBytes();//Base64.decode(data,Base64.DEFAULT);
         //advertDataBuilder.addServiceData(mUUID, dataBytes);
         advertDataBuilder.addManufacturerData(dataBytes.length,dataBytes);
         //.build();
