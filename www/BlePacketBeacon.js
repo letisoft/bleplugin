@@ -1,4 +1,3 @@
-cordova.define("ble-packet-beacon.BlePacketBeacon", function(require, exports, module) {
 var exec = require('cordova/exec');
 
 var PLUGIN_NAME = 'BlePacketBeacon';
@@ -27,4 +26,3 @@ var BlePacketBeacon = {
 
 module.exports = BlePacketBeacon;
 
-});
