@@ -51,6 +51,7 @@ public class BlePacketBeacon extends CordovaPlugin {
         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
             super.onStartSuccess(settingsInEffect);
             try {
+                Log.d(TAG,"onStartSuccess");
                 JSONObject data = new JSONObject();
                 data.put("startAdvertising", "started");
                 sendInfo(mCallbackContext, data, true);
@@ -150,6 +151,7 @@ public class BlePacketBeacon extends CordovaPlugin {
         if (canAdvertise())
             return;
 
+        Log.d(TAG,"stopAdvertising called");
         BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
         advertiser.stopAdvertising(mAdvertisingCallback);
     }
@@ -158,21 +160,18 @@ public class BlePacketBeacon extends CordovaPlugin {
         if(!canAdvertise())
             return false;
 
+        Log.d(TAG,"startAdvertising with " + data);
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
         settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
         settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_MODE_LOW_POWER);
-        settingsBuilder.setConnectable(false).setTimeout(1000);
-        //.build();
+        settingsBuilder.setConnectable(false);//setTimeout(1000);
+        settingsBuilder.setTimeout(100);
 
 
         AdvertiseData.Builder advertDataBuilder  = new AdvertiseData.Builder();
-        //advertDataBuilder.setIncludeDeviceName(true);
-        //advertDataBuilder.addServiceUuid(mUUID);
 
         byte [] dataBytes = data.getBytes();//Base64.decode(data,Base64.DEFAULT);
-        //advertDataBuilder.addServiceData(mUUID, dataBytes);
         advertDataBuilder.addManufacturerData(dataBytes.length,dataBytes);
-        //.build();
 
         mCallbackContext = callBack;
         BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
