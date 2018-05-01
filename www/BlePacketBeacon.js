@@ -4,7 +4,7 @@ var PLUGIN_NAME = 'BlePacketBeacon';
 
 var BlePacketBeacon = {
   startAdvertising: function(onSuccess, onError, data) {
-    exec(onSuccess, onError, PLUGIN_NAME, 'startAdvertising', [data]);
+    exec(onSuccess, onError, PLUGIN_NAME, 'startAdvertising', data);
   },
 
   stopAdvertising: function(onSuccess, onError) {

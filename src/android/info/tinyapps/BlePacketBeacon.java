@@ -3,7 +3,6 @@ package info.tinyapps;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
-
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -11,14 +10,11 @@ import android.bluetooth.le.AdvertiseCallback;
 import android.bluetooth.le.AdvertiseData;
 import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.ParcelUuid;
 import android.util.Log;
-import android.util.Base64;
 import java.util.UUID;
-
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
@@ -27,12 +23,10 @@ import org.json.JSONObject;
 
 public class BlePacketBeacon extends CordovaPlugin {
     private CallbackContext mCallbackContext = null;
-    //private BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
-    private AdvertiseData data;
-    private AdvertiseSettings settings;
-
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private static final String TAG = "BlePacketBeacon";
+    BluetoothLeAdvertiser mAdvertiser;
+
     private ParcelUuid mUUID = new ParcelUuid(UUID.fromString("3B4D0479-8AB9-4A6A-B127-3A74DB7FE4D5"));
 
     final String [] PERMSSIONS = {
@@ -82,7 +76,9 @@ public class BlePacketBeacon extends CordovaPlugin {
         try {
             if (action.equals("startAdvertising")) {
                 String data = args.getString(0);
-                if(!startAdvertising(data, callbackContext)){
+                int timeOut = args.getInt(1);
+
+                if(!startAdvertising(data, timeOut,callbackContext)){
                     sendError(callbackContext,"devcie cannot advertise",true);
                 }
                 else{
@@ -148,24 +144,23 @@ public class BlePacketBeacon extends CordovaPlugin {
     }
 
     private void stopAdvertising() throws Exception {
-        if (canAdvertise())
+        if (canAdvertise() || mAdvertiser == null)
             return;
 
         Log.d(TAG,"stopAdvertising called");
-        BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
-        advertiser.stopAdvertising(mAdvertisingCallback);
+        mAdvertiser.stopAdvertising(mAdvertisingCallback);
     }
 
-    private boolean startAdvertising(String data, CallbackContext callBack) throws Exception{
+    private boolean startAdvertising(String data, int timeout,CallbackContext callBack) throws Exception{
         if(!canAdvertise())
             return false;
 
         Log.d(TAG,"startAdvertising with " + data);
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
         settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
-        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_MODE_LOW_POWER);
-        settingsBuilder.setConnectable(false);//setTimeout(1000);
-        settingsBuilder.setTimeout(100);
+        settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH);
+        settingsBuilder.setConnectable(false);
+        settingsBuilder.setTimeout(timeout);
 
 
         AdvertiseData.Builder advertDataBuilder  = new AdvertiseData.Builder();
@@ -174,8 +169,9 @@ public class BlePacketBeacon extends CordovaPlugin {
         advertDataBuilder.addManufacturerData(dataBytes.length,dataBytes);
 
         mCallbackContext = callBack;
-        BluetoothLeAdvertiser advertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
-        advertiser.startAdvertising(settingsBuilder.build(),advertDataBuilder.build(),mAdvertisingCallback);
+        if(mAdvertiser == null)
+            mAdvertiser = BluetoothAdapter.getDefaultAdapter().getBluetoothLeAdvertiser();
+        mAdvertiser.startAdvertising(settingsBuilder.build(),advertDataBuilder.build(),mAdvertisingCallback);
 
         return true;
     }
