@@ -144,7 +144,7 @@ public class BlePacketBeacon extends CordovaPlugin {
     }
 
     private void stopAdvertising() throws Exception {
-        if (canAdvertise() || mAdvertiser == null)
+        if (!canAdvertise() || mAdvertiser == null)
             return;
 
         Log.d(TAG,"stopAdvertising called");
