@@ -155,7 +155,7 @@ public class BlePacketBeacon extends CordovaPlugin {
         if(!canAdvertise())
             return false;
 
-        Log.d(TAG,"startAdvertising with " + data);
+        Log.d(TAG,"startAdvertising with " + data + " and timeout of " + timeout);
         AdvertiseSettings.Builder settingsBuilder = new AdvertiseSettings.Builder();
         settingsBuilder.setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY);
         settingsBuilder.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH);
